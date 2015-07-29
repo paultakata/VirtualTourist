@@ -37,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		B616FC431B66095E009B0C3C /* sadkittyerror.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sadkittyerror.jpg; sourceTree = "<group>"; };
+		B61EB5FE1B687BE50054D55F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Virtual Tourist/README.md"; sourceTree = "<group>"; };
 		B633D06E1B5F349000E97E57 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		B65FB18B1B55E46C00529CCF /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B65FB18F1B55E46C00529CCF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +80,7 @@
 		B65FB1821B55E46C00529CCF = {
 			isa = PBXGroup;
 			children = (
+				B61EB5FE1B687BE50054D55F /* README.md */,
 				B65FB18D1B55E46C00529CCF /* Virtual Tourist */,
 				B65FB1A61B55E46C00529CCF /* Virtual TouristTests */,
 				B65FB18C1B55E46C00529CCF /* Products */,
