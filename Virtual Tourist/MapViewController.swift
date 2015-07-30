@@ -136,7 +136,9 @@ class MapViewController: UIViewController {
         //Check for errors
         if error != nil {
             
-            alertUserWithTitle("Error", message: "Something weird happened. If it keeps happening you might have to reinstall.", retry: false)
+            alertUserWithTitle("Error",
+                message: "Something weird happened. If it keeps happening you might have to reinstall.",
+                retry: false)
         }
         
         return results as! [Pin]
@@ -156,7 +158,9 @@ class MapViewController: UIViewController {
             } else {
                 
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.alertUserWithTitle("Error", message: "There was a problem downloading your pictures.", retry: true)
+                    self.alertUserWithTitle("Error",
+                        message: "There was a problem downloading your pictures.",
+                        retry: true)
                 })
             }
         })

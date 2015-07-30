@@ -35,7 +35,7 @@ class PhotoCollectionViewController: UIViewController {
         //Create fetch request for photos which match the sent Pin.
         let fetchRequest = NSFetchRequest(entityName: "Photo")
         fetchRequest.predicate = NSPredicate(format: "pin == %@", self.receivedPin)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "imageFilePath", ascending: true)]
+        fetchRequest.sortDescriptors = []
         
         //Create fetched results controller with the new fetch request.
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
@@ -141,7 +141,7 @@ class PhotoCollectionViewController: UIViewController {
             
             UIView.animateWithDuration(0.1,
                 animations: {
-                cell.imageView.alpha = 0.2
+                cell.imageView.alpha = 0.5
             })
         } else {
             
@@ -406,6 +406,13 @@ extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        
+        //Check to make sure UI elements are correctly displayed.
+        if controller.fetchedObjects?.count > 0 {
+            
+            noImagesLabel.hidden = true
+            newCollectionButton.enabled = true
+        }
         
         //Make the relevant updates to the collectionView once Core Data has finished its changes.
         collectionView.performBatchUpdates({
