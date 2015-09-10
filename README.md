@@ -1,5 +1,5 @@
 # VirtualTourist
-Part of my Udacity iOS Nanodegree coursework.
+Project 4 of my Udacity iOS Nanodegree coursework.
 
 This app is my first look into Core Data and how to use it to store remotely
 fetched data. The app takes a location given by the user, fetches data and
