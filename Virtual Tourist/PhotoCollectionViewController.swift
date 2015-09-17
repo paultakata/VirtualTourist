@@ -67,9 +67,13 @@ class PhotoCollectionViewController: UIViewController {
         
         //Perform initial fetch.
         var error: NSError?
-        fetchedResultsController.performFetch(&error)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let error1 as NSError {
+            error = error1
+        }
         
-        if let error = error {
+        if let _ = error {
             
             alertUserWithTitle("Error",
                 message: "There's something wrong with this pin. Try dropping another one on the map.",
@@ -137,7 +141,7 @@ class PhotoCollectionViewController: UIViewController {
     func configureCell(cell: PhotoCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
         
         //If the user has selected a cell, grey it out...
-        if let index = find(selectedIndexes, indexPath) {
+        if let _ = selectedIndexes.indexOf(indexPath) {
             
             UIView.animateWithDuration(0.1,
                 animations: {
@@ -253,7 +257,7 @@ class PhotoCollectionViewController: UIViewController {
 
 extension PhotoCollectionViewController: MKMapViewDelegate {
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         //Use dequeued pin annotation view if available, otherwise create a new one.
         if let annotation = annotation as? Pin {
@@ -315,7 +319,7 @@ extension PhotoCollectionViewController: UICollectionViewDelegate {
         }
         
         //If the user touches a cell, add or remove it from the selectedIndexes array...
-        if let index = find(selectedIndexes, indexPath) {
+        if let index = selectedIndexes.indexOf(indexPath) {
             
             selectedIndexes.removeAtIndex(index)
         } else {
@@ -338,7 +342,7 @@ extension PhotoCollectionViewController: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         //Try to get section info from the fetched results controller...
-        if let sectionInfo = self.fetchedResultsController.sections?[section] as? NSFetchedResultsSectionInfo {
+        if let sectionInfo = self.fetchedResultsController.sections?[section] {
             
             //...and return the number of items in the section...
             return sectionInfo.numberOfObjects

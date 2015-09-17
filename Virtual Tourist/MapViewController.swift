@@ -73,7 +73,7 @@ class MapViewController: UIViewController {
             //...and use it to initialise a new Pin managed object. Store it for reuse.
         case .Began:
             pinToBeAdded = Pin(coordinate: location, context: sharedContext)
-            mapView.addAnnotation(pinToBeAdded)
+            mapView.addAnnotation(pinToBeAdded!)
         
             //If the user drags the pin around, use KVO to update the location of the pin
             //and the coordinate property of the Pin object.
@@ -103,7 +103,7 @@ class MapViewController: UIViewController {
             
             UIView.animateWithDuration(0.6,
                 delay: 0,
-                options: .BeginFromCurrentState | .CurveEaseInOut,
+                options: [.BeginFromCurrentState, .CurveEaseInOut],
                 animations: { self.tapPinsLabel.alpha = 0.0 },
                 completion: nil)
 
@@ -115,7 +115,7 @@ class MapViewController: UIViewController {
             
             UIView.animateWithDuration(0.6,
                 delay: 0,
-                options: .Autoreverse | .CurveEaseInOut | .Repeat,
+                options: [.Autoreverse, .CurveEaseInOut, .Repeat],
                 animations: { self.tapPinsLabel.alpha = 1.0 },
                 completion: nil)
             
@@ -131,7 +131,13 @@ class MapViewController: UIViewController {
         
         //Create and execute the fetch request.
         let fetchRequest = NSFetchRequest(entityName: "Pin")
-        let results = sharedContext.executeFetchRequest(fetchRequest, error: error)
+        let results: [AnyObject]?
+        do {
+            results = try sharedContext.executeFetchRequest(fetchRequest)
+        } catch let error1 as NSError {
+            error.memory = error1
+            results = nil
+        }
         
         //Check for errors
         if error != nil {
@@ -233,7 +239,7 @@ class MapViewController: UIViewController {
 
 extension MapViewController: MKMapViewDelegate {
     
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         
         if inEditingMode {
             
@@ -260,7 +266,7 @@ extension MapViewController: MKMapViewDelegate {
         }
     }
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         //Use dequeued pin annotation view if available, otherwise create a new one.
         if let annotation = annotation as? Pin {
@@ -286,7 +292,7 @@ extension MapViewController: MKMapViewDelegate {
         return nil
     }
     
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
         //Save the map region as the user moves it around.
         saveMapRegion()

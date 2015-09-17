@@ -35,7 +35,7 @@ class VirtualTouristClient {
             
             //Build the URL and URL request specific to the website required.
             let urlString = Constants.BaseFlickrURL + VirtualTouristClient.escapedParameters(parameters)
-            var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+            let request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
             
             //Make the request.
             let task = session.dataTaskWithRequest(request) {
@@ -48,7 +48,7 @@ class VirtualTouristClient {
                     completionHandler(result: nil, error: newError)
                 } else {
                     
-                    VirtualTouristClient.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
+                    VirtualTouristClient.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
                 }
             }
             
@@ -60,7 +60,7 @@ class VirtualTouristClient {
         completionHandler: (result: NSData?, error: NSError?) -> Void) {
             
             //Create request with urlString.
-            var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+            let request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
             
             //Make the request.
             let task = session.dataTaskWithRequest(request) {
@@ -97,13 +97,13 @@ class VirtualTouristClient {
             urlVars += [key + "=" + "\(replaceSpaceValue)"]
         }
         
-        return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
+        return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
     }
     
     //Check to see if there is a received error, if not, return the original local error.
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
         
-        if let parsedResult = NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments, error: nil) as? [String : AnyObject] {
+        if let parsedResult = (try? NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)) as? [String : AnyObject] {
             
             if let status = parsedResult[JSONResponseKeys.Status]  as? String,
                   message = parsedResult[JSONResponseKeys.Message] as? String {
@@ -123,7 +123,13 @@ class VirtualTouristClient {
     class func parseJSONWithCompletionHandler(data: NSData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) {
         
         var parsingError: NSError?
-        let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments, error: &parsingError)
+        let parsedResult: AnyObject?
+        do {
+            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+        } catch let error as NSError {
+            parsingError = error
+            parsedResult = nil
+        }
         
         if let error = parsingError {
             

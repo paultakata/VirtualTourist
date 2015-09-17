@@ -32,9 +32,10 @@ class Photo: NSManagedObject {
             
             //After far too long I found the sandbox path can (and does) change. Grrr.😠
             //So I reassemble the filePath here.
-            let fileName = imageFilePath.lastPathComponent
-            let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-            let pathArray = [dirPath, fileName]
+            let filePathURL = NSURL.fileURLWithPath(imageFilePath)
+            let lastPathComponent = filePathURL.lastPathComponent!
+            let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+            let pathArray = [dirPath, lastPathComponent]
             let fileURL = NSURL.fileURLWithPathComponents(pathArray)!
             
             return UIImage(contentsOfFile: fileURL.path!)
@@ -64,13 +65,17 @@ class Photo: NSManagedObject {
     override func prepareForDeletion() {
         
         //Delete the associated image file when the Photo managed object is deleted.
-        if let fileName = imageFilePath?.lastPathComponent {
-            
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-        let pathArray = [dirPath, fileName]
-        let fileURL = NSURL.fileURLWithPathComponents(pathArray)!
-        
-        NSFileManager.defaultManager().removeItemAtURL(fileURL, error: nil)
+        if let imageFilePath = imageFilePath,
+            fileName = NSURL.fileURLWithPath(imageFilePath).lastPathComponent {
+                
+                let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+                let pathArray = [dirPath, fileName]
+                let fileURL = NSURL.fileURLWithPathComponents(pathArray)!
+                
+                do {
+                    try NSFileManager.defaultManager().removeItemAtURL(fileURL)
+                } catch _ {
+                }
         }
     }
 }

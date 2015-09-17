@@ -24,7 +24,7 @@ extension VirtualTouristClient {
         
         if let numberOfPages = pin.numberOfPagesReturned {
             
-            let numberOfPagesAsInt = numberOfPages as! Int               //All this ugly code is to get my NSNumber
+            let numberOfPagesAsInt = numberOfPages as Int               //All this ugly code is to get my NSNumber
             let numberOfPagesAsUInt32 = UInt32(numberOfPagesAsInt)       //wrapped Int into a UInt32 and back again 😞
             let pageAsUInt32 = arc4random_uniform(numberOfPagesAsUInt32) //Here, get a random page in the range received.
             
@@ -111,8 +111,8 @@ extension VirtualTouristClient {
                 if let result = result {
                     
                     //...make a fileURL for it...
-                    let fileName = imageURLString.lastPathComponent //Already includes ".jpg" suffix.
-                    let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+                    let fileName = NSURL.fileURLWithPath(imageURLString).lastPathComponent! //Already includes ".jpg" suffix.
+                    let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
                     let pathArray = [dirPath, fileName]
                     let fileURL = NSURL.fileURLWithPathComponents(pathArray)!
                     
